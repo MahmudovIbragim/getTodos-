@@ -2,30 +2,33 @@ import { useEffect } from "react";
 import { useState } from "react";
 
 const App = () => {
-  const [userId, setUserId] = useState(1)
+  const [posts, setPosts] = useState([]);
   const getTodos = async () => {
-  try{
-     const response = await fetch(
-      `https://jsonplaceholder.typicode.com/posts/${userId}`
-    );
-    const responseData = await response.json()
-    console.log(responseData);
-  }catch(e){
-    console.error('бекенд упал',e);
-  }
+    try {
+      const response = await fetch(
+        `https://jsonplaceholder.typicode.com/posts`
+      );
+      const responseData = await response.json();
+      setPosts(responseData);
+    } catch (e) {
+      console.error("бекенд упал", e);
+    }
   };
 
   useEffect(() => {
-    getTodos()
-  }, [userId])
+    getTodos();
+  }, []);
 
-
-
-
-
-  return <div>
-    <input type="number" value={userId} onChange={(e) => setUserId(e.target.value)}/>
-  </div>;
+  return (
+    <div>
+      {posts.map((item) => (
+        <div key={item.id}>
+          <h4>{item.title}</h4>
+          <p>{item.body}</p>
+        </div>
+      ))}
+    </div>
+  );
 };
 
 export default App;
